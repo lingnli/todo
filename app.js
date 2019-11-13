@@ -37,6 +37,7 @@ const Todo = require("./models/todo");
 app.get("/", (req, res) => {
   Todo.find((err, todos) => {
     if (err) return console.log(err);
+
     res.render("index", { todos });
   });
 });
@@ -65,7 +66,10 @@ app.post("/todos", (req, res) => {
 
 //顯示特定todo詳細資料
 app.get("/todos/:id", (req, res) => {
-  res.send("顯示特定todo");
+  Todo.findById(req.params.id, (err, todo) => {
+    if (err) return console.log(err);
+    return res.render("details", { todo });
+  });
 });
 
 //修改特定todo
