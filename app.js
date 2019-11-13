@@ -1,6 +1,11 @@
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose"); //載入mongoose
+const exphbs = require("express-handlebars");
+
+//handlebars設定
+app.engine("handlebars", exphbs({ defaultLayout: "main" }));
+app.set("view engine", "handlebars");
 
 //設定連線到model中的todo資料庫
 mongoose.connect("mongodb://127.0.0.1/todo", {
@@ -26,7 +31,7 @@ const Todo = require("./models/todo");
 
 //設定route
 app.get("/", (req, res) => {
-  res.send("this will be a todo app");
+  res.render("index");
 });
 //首頁：顯示所有todo
 app.get("/todos", (req, res) => {
