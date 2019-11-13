@@ -74,12 +74,25 @@ app.get("/todos/:id", (req, res) => {
 
 //修改特定todo
 app.get("/todos/:id/edit", (req, res) => {
-  res.send("修改特定todo");
+  Todo.findById(req.params.id, (err, todo) => {
+    if (err) return console.log(err);
+    return res.render("edit", { todo });
+  });
 });
 //修改特定todo的動作，修改後回到修改頁面
 app.post("/todos/:id/edit", (req, res) => {
-  res.send("修改特定todo送出的動作");
+  Todo.findById(req.params.id, (err, todo) => {
+    //在Todo model中找到要更新的todo document
+    if (err) return console.log(err);
+    todo.name = req.body.name; //更新todo的name為表單傳來的name
+    todo.save(err => {
+      //將更新name的todo存入Todo model
+      if (err) return console.log(err);
+      return res.redirect(`/todos/${req.params.id}`); //送出後導向顯示特定資料頁面
+    });
+  });
 });
+
 //刪除特定todo 非頁面，一個動作
 app.post("/todos/:id/delete", (req, res) => {
   res.send("刪除特定todo");
