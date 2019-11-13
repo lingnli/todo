@@ -95,7 +95,13 @@ app.post("/todos/:id/edit", (req, res) => {
 
 //刪除特定todo 非頁面，一個動作
 app.post("/todos/:id/delete", (req, res) => {
-  res.send("刪除特定todo");
+  Todo.findById(req.params.id, (err, todo) => {
+    if (err) return console.log(err);
+    todo.remove(err => {
+      if (err) return console.log(err);
+      return res.redirect("/");
+    });
+  });
 });
 
 app.listen(3000, () => {
