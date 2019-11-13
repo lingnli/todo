@@ -2,6 +2,10 @@ const express = require("express");
 const app = express();
 const mongoose = require("mongoose"); //載入mongoose
 const exphbs = require("express-handlebars");
+const bodyParser = require("body-parser");
+
+//body-parser設定
+app.use(bodyParser.urlencoded({ extended: true }));
 
 //handlebars設定
 app.engine("handlebars", exphbs({ defaultLayout: "main" }));
@@ -43,11 +47,20 @@ app.get("/todos", (req, res) => {
 
 //新增一筆todo
 app.get("/todos/new", (req, res) => {
-  res.send("新增一筆todo");
+  res.render("new");
 });
 //新增一筆todo的動作，新增後回到/todos頁面
 app.post("/todos", (req, res) => {
-  res.send("新增一筆todo");
+  console.log(req.body.name);
+  //建立Todo model實例
+  const todo = new Todo({
+    name: req.body.name
+  });
+  //將剛建立的todo存入資料庫
+  todo.save(err => {
+    if (err) return console.log(err);
+    return res.redirect("/");
+  });
 });
 
 //顯示特定todo詳細資料
