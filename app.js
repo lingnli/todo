@@ -24,8 +24,40 @@ db.once("open", () => {
 //載入todo model
 const Todo = require("./models/todo");
 
+//設定route
 app.get("/", (req, res) => {
   res.send("this will be a todo app");
+});
+//首頁：顯示所有todo
+app.get("/todos", (req, res) => {
+  res.send("顯示所有todo");
+});
+
+//新增一筆todo
+app.get("/todos/new", (req, res) => {
+  res.send("新增一筆todo");
+});
+//新增一筆todo的動作，新增後回到/todos頁面
+app.post("/todos", (req, res) => {
+  res.send("新增一筆todo");
+});
+
+//顯示特定todo詳細資料
+app.get("/todos/:id", (req, res) => {
+  res.send("顯示特定todo");
+});
+
+//修改特定todo
+app.get("/todos/:id/edit", (req, res) => {
+  res.send("修改特定todo");
+});
+//修改特定todo的動作，修改後回到修改頁面
+app.post("/todos/:id/edit", (req, res) => {
+  res.send("修改特定todo送出的動作");
+});
+//刪除特定todo 非頁面，一個動作
+app.post("/todos/:id/delete", (req, res) => {
+  res.send("刪除特定todo");
 });
 
 app.listen(3000, () => {
