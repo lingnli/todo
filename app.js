@@ -31,11 +31,14 @@ const Todo = require("./models/todo");
 
 //設定route
 app.get("/", (req, res) => {
-  res.render("index");
+  Todo.find((err, todos) => {
+    if (err) return console.log(err);
+    res.render("index", { todos });
+  });
 });
 //首頁：顯示所有todo
 app.get("/todos", (req, res) => {
-  res.send("顯示所有todo");
+  res.redirect("/");
 });
 
 //新增一筆todo
