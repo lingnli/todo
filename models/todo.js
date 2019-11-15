@@ -7,6 +7,11 @@ const todoschema = new Schema({
   name: {
     type: String, //name型態
     required: true //是否必須
+  },
+  done: {
+    //新增一個判斷是否完成的checkbox
+    type: Boolean,
+    default: false //預設值為false 未完成
   }
   //todo model中每筆資料型態為object，內容含name
 });

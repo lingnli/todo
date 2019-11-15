@@ -1,6 +1,21 @@
-<h1>{{todo.name}}</h1>
+<h1>
+  <input type="checkbox" name="done" {{#if todo.done}}checked{{/if}} disabled>
+  {{todo.name}}</h1>
 <a href="/">back</a>
 <a href="/todos/{{todo.id}}/edit">edit</a>
 <form action="/todos/{{todo.id}}/delete" method="POST" style="display: inline">
   <button type="submit">delete</button>
 </form>
+
+<!--
+<a href='/'></a> 
+發出GET請求
+
+若要發出非GET請求，EX:POST
+需使用form表單
+form表單中的method可以做設定
+
+當表單發出POST請求到/todos/:id/delete時
+會執行app.js中
+app.post("/todos/:id/delete", (req, res) => {})的function
+-->

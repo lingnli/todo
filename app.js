@@ -82,9 +82,14 @@ app.get("/todos/:id/edit", (req, res) => {
 //修改特定todo的動作，修改後回到修改頁面
 app.post("/todos/:id/edit", (req, res) => {
   Todo.findById(req.params.id, (err, todo) => {
+    console.log(req.body);
     //在Todo model中找到要更新的todo document
     if (err) return console.log(err);
     todo.name = req.body.name; //更新todo的name為表單傳來的name
+    //處理checkbox
+    if (req.body.done === "on") {
+      todo.done = true;
+    }
     todo.save(err => {
       //將更新name的todo存入Todo model
       if (err) return console.log(err);

@@ -1,5 +1,6 @@
 <form action="/todos/{{todo.id}}/edit" method="POST">
   <!--以POST方法向/todos/:id/edit發出請求，不是導向頁面，導向頁面是由app.js中設定-->
+  <input type="checkbox" name="done" {{#if todo.done}}checked{{/if}}>
   <input type="text" name="name" value="{{todo.name}}">
   <button type="submit">edit</button>
 </form>
