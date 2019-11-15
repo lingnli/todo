@@ -36,84 +36,10 @@ db.once("open", () => {
 //載入todo model
 const Todo = require("./models/todo");
 
-//設定route
-app.get("/", (req, res) => {
-  Todo.find({}) //找到所有資料
-    .sort({ name: "asc" }) //按照asc方法排序 sort為mongoose提供的method
-    .exec((err, todos) => {
-      if (err) return console.log(err);
-      return res.render("index", { todos });
-    });
-});
-//首頁：顯示所有todo
-app.get("/todos", (req, res) => {
-  res.redirect("/");
-});
-
-//新增一筆todo
-app.get("/todos/new", (req, res) => {
-  res.render("new");
-});
-//新增一筆todo的動作，新增後回到/todos頁面
-app.post("/todos", (req, res) => {
-  console.log(req.body.name);
-  //建立Todo model實例
-  const todo = new Todo({
-    name: req.body.name
-  });
-  //將剛建立的todo存入資料庫
-  todo.save(err => {
-    if (err) return console.log(err);
-    return res.redirect("/");
-  });
-});
-
-//顯示特定todo詳細資料
-app.get("/todos/:id", (req, res) => {
-  Todo.findById(req.params.id, (err, todo) => {
-    if (err) return console.log(err);
-    return res.render("details", { todo });
-  });
-});
-
-//修改特定todo
-app.get("/todos/:id/edit", (req, res) => {
-  Todo.findById(req.params.id, (err, todo) => {
-    if (err) return console.log(err);
-    return res.render("edit", { todo });
-  });
-});
-//修改特定todo的動作，修改後回到修改頁面
-app.put("/todos/:id/edit", (req, res) => {
-  Todo.findById(req.params.id, (err, todo) => {
-    console.log(req.body);
-    //在Todo model中找到要更新的todo document
-    if (err) return console.log(err);
-    todo.name = req.body.name; //更新todo的name為表單傳來的name
-    //處理checkbox
-    if (req.body.done === "on") {
-      todo.done = true;
-    } else {
-      todo.done = false;
-    }
-    todo.save(err => {
-      //將更新name的todo存入Todo model
-      if (err) return console.log(err);
-      return res.redirect(`/todos/${req.params.id}`); //送出後導向顯示特定資料頁面
-    });
-  });
-});
-
-//刪除特定todo 非頁面，一個動作
-app.delete("/todos/:id/delete", (req, res) => {
-  Todo.findById(req.params.id, (err, todo) => {
-    if (err) return console.log(err);
-    todo.remove(err => {
-      if (err) return console.log(err);
-      return res.redirect("/");
-    });
-  });
-});
+//載入 / 結尾的router
+app.use("/", require("./routes/home"));
+//載入 /todos/ 結尾開始的router
+app.use("/todos", require("./routes/todo"));
 
 app.listen(3000, () => {
   console.log("app is running!");
