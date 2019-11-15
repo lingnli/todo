@@ -35,11 +35,12 @@ const Todo = require("./models/todo");
 
 //設定route
 app.get("/", (req, res) => {
-  Todo.find((err, todos) => {
-    if (err) return console.log(err);
-
-    res.render("index", { todos });
-  });
+  Todo.find({}) //找到所有資料
+    .sort({ name: "desc" }) //按照asc方法排序 sort為mongoose提供的method
+    .exec((err, todos) => {
+      if (err) return console.log(err);
+      return res.render("index", { todos });
+    });
 });
 //首頁：顯示所有todo
 app.get("/todos", (req, res) => {
@@ -89,6 +90,8 @@ app.post("/todos/:id/edit", (req, res) => {
     //處理checkbox
     if (req.body.done === "on") {
       todo.done = true;
+    } else {
+      todo.done = false;
     }
     todo.save(err => {
       //將更新name的todo存入Todo model
