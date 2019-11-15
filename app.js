@@ -3,7 +3,10 @@ const app = express();
 const mongoose = require("mongoose"); //載入mongoose
 const exphbs = require("express-handlebars");
 const bodyParser = require("body-parser");
+const middleOverride = require("method-override");
 
+//method-override設定
+app.use(middleOverride("_method"));
 //body-parser設定
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -36,7 +39,7 @@ const Todo = require("./models/todo");
 //設定route
 app.get("/", (req, res) => {
   Todo.find({}) //找到所有資料
-    .sort({ name: "desc" }) //按照asc方法排序 sort為mongoose提供的method
+    .sort({ name: "asc" }) //按照asc方法排序 sort為mongoose提供的method
     .exec((err, todos) => {
       if (err) return console.log(err);
       return res.render("index", { todos });
@@ -81,7 +84,7 @@ app.get("/todos/:id/edit", (req, res) => {
   });
 });
 //修改特定todo的動作，修改後回到修改頁面
-app.post("/todos/:id/edit", (req, res) => {
+app.put("/todos/:id/edit", (req, res) => {
   Todo.findById(req.params.id, (err, todo) => {
     console.log(req.body);
     //在Todo model中找到要更新的todo document
@@ -102,7 +105,7 @@ app.post("/todos/:id/edit", (req, res) => {
 });
 
 //刪除特定todo 非頁面，一個動作
-app.post("/todos/:id/delete", (req, res) => {
+app.delete("/todos/:id/delete", (req, res) => {
   Todo.findById(req.params.id, (err, todo) => {
     if (err) return console.log(err);
     todo.remove(err => {
