@@ -16,7 +16,7 @@ const userSchema = new Schema({
   },
   date: {
     type: Date, //儲存資料的type為Date
-    default: Date.new //預設為建立帳號當下的時間戳記
+    default: Date.now //預設為建立帳號當下的時間戳記
   }
 });
 
