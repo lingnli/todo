@@ -40,6 +40,8 @@ const Todo = require("./models/todo");
 app.use("/", require("./routes/home"));
 //載入 /todos/ 結尾開始的router
 app.use("/todos", require("./routes/todo"));
+//載入 /users 結尾開始的router
+app.use("/users", require("./routes/user"));
 
 app.listen(3000, () => {
   console.log("app is running!");
