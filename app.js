@@ -4,6 +4,16 @@ const mongoose = require("mongoose"); //載入mongoose
 const exphbs = require("express-handlebars");
 const bodyParser = require("body-parser");
 const middleOverride = require("method-override");
+const session = require("express-session");
+
+//session setting
+app.use(
+  session({
+    secret: "my secret key", //驗證session id的字串
+    resave: false, //每次互動後，強制把session更新到session store
+    saveUninitialized: true //將未初始化的session(未登入使用者的session)存到store
+  })
+);
 
 //method-override設定
 app.use(middleOverride("_method"));

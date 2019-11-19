@@ -42,7 +42,7 @@ router.post("/register", (req, res) => {
       newUser
         .save() //成功儲存後執行then的callback
         .then(user => {
-          res.redirect("/");
+          res.redirect("/"); //倒回首頁 localhose:3000/
         })
         .catch(err => console.log(err)); //若有err則使用catch()接住錯誤
     }
