@@ -1,15 +1,26 @@
 const express = require("express");
 const router = express.Router();
 const User = require("../models/user");
+const passport = require("passport");
 
-//log in page and action
+//login page
 router.get("/login", (req, res) => {
   res.render("login");
 });
-
-router.post("/login", (req, res) => {
-  res.send("login finish to home page");
+//login check
+router.post("/login", (req, res, next) => {
+  console.log(req.body);
+  passport.authenticate("local", {
+    //Strategy:local
+    //使用passport功能authenticate去驗證
+    successRedirect: "/", //成功轉到/頁面
+    failureRedirect: "/users/login" //失敗留在login頁面
+  })(req, res, next); //把(req,res,next)傳到passport.authenticate()中去做驗證
 });
+/*可改寫成
+router.post('/login',passport.authenticate('local',{successRedirect:'/',failureRedirect:'/users/login'}))
+傳給router.post的直接傳middleware
+*/
 
 //register page and action
 router.get("/register", (req, res) => {

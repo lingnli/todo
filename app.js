@@ -3,17 +3,11 @@ const app = express();
 const mongoose = require("mongoose"); //載入mongoose
 const exphbs = require("express-handlebars");
 const bodyParser = require("body-parser");
+//載入todo model
+const Todo = require("./models/todo");
 const middleOverride = require("method-override");
 const session = require("express-session");
-
-//session setting
-app.use(
-  session({
-    secret: "my secret key", //驗證session id的字串
-    resave: false, //每次互動後，強制把session更新到session store
-    saveUninitialized: true //將未初始化的session(未登入使用者的session)存到store
-  })
-);
+const passport = require("passport");
 
 //method-override設定
 app.use(middleOverride("_method"));
@@ -43,8 +37,26 @@ db.once("open", () => {
   console.log("mongodb connected!");
 });
 
-//載入todo model
-const Todo = require("./models/todo");
+//session setting
+app.use(
+  session({
+    secret: "my secret key", //驗證session id的字串
+    resave: false, //每次互動後，強制把session更新到session store
+    saveUninitialized: true //將未初始化的session(未登入使用者的session)存到store
+  })
+);
+
+//passport setting:passport初始化，使用sessione功能
+app.use(passport.initialize());
+app.use(passport.session());
+passport.session(); //需再sesstion setting後才可以順利執行
+//載入config/passport
+require("./config/passport")(passport); //(module.exports = passport=>{...})
+//經過passport.js判斷登入成功後可以從User model中取得特定user document
+app.use((req, res, next) => {
+  res.locals.user = req.user;
+  next();
+});
 
 //載入 / 結尾的router
 app.use("/", require("./routes/home"));
