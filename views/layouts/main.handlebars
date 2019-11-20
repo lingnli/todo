@@ -14,7 +14,11 @@
   <header>
     <nav class="navbar navbar-dark bg-primary justify-content-between">
       <a href="/" class="navbar-brand">Todo list</a>
-      <a href="/todos/new" class="btn btn-outline-light">Create</a>
+      {{#if isAuthenticated}}
+      <a href="/users/logout" class="navbar-brand">Logout</a>
+      {{else}}
+      <a href="/users/login" class="navbar-brand">Login</a>
+      {{/if}}
     </nav>
   </header>
 

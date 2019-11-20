@@ -52,10 +52,11 @@ app.use(passport.session());
 passport.session(); //需再sesstion setting後才可以順利執行
 //載入config/passport
 require("./config/passport")(passport); //(module.exports = passport=>{...})
-//經過passport.js判斷登入成功後可以從User model中取得特定user document
+//經過passport.js判斷登入成功後
 app.use((req, res, next) => {
-  res.locals.user = req.user;
-  next();
+  res.locals.user = req.user; //從User model中取得特定user document讓views使用
+  res.locals.isAuthenticated = req.isAuthenticated();
+  next(); //新增一個isAuthenticated來判斷使用者是否登入，讓views使用
 });
 
 //載入 / 結尾的router
