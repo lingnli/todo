@@ -21,7 +21,8 @@ app.set("view engine", "handlebars");
 //設定連線到model中的todo資料庫
 mongoose.connect("mongodb://127.0.0.1/todo", {
   useNewUrlParser: true,
-  useUnifiedTopology: true
+  useUnifiedTopology: true,
+  useCreateIndex: true
 });
 
 //成功連線後mongoose會回傳一個connection
