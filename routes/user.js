@@ -61,7 +61,8 @@ router.post("/register", (req, res) => {
 });
 //log out page
 router.get("/logout", (req, res) => {
-  res.send("logout");
+  req.logout(); //使用passport的logout()方法登出
+  res.redirect("/users/login");
 });
 
 module.exports = router;
