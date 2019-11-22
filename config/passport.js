@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const LocalStrategy = require("passport-local").Strategy;
 //需要從User model中判斷是否註冊過
 const User = require("../models/user");
+const bcrypt = require("bcrypt");
 
 //module export的另一種方法
 module.exports = passport => {
@@ -24,12 +25,17 @@ module.exports = passport => {
               message: "The email is not registered!"
             });
           }
-          if (user.password !== password) {
-            return done(null, false, {
-              message: "Wrong password!"
-            });
-          }
-          return done(null, user);
+          //經bcrypt後的密碼比對
+          bcrypt.compare(password, user.password, (err, isMatch) => {
+            if (err) throw err;
+            if (isMatch) {
+              return done(null, user);
+            } else {
+              return (
+                done(null, false), { message: "email or password incorrect" }
+              );
+            }
+          });
         });
     })
   );
