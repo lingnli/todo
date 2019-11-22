@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models/user");
 const passport = require("passport");
+const bcrypt = require("bcrypt");
 
 //login page
 router.get("/login", (req, res) => {
@@ -35,7 +36,7 @@ router.post("/register", (req, res) => {
     //findOne去User model中找是否有對應的email
     if (user) {
       //當對應的email找到user時
-      console.log("user alreay register!");
+      console.log("user already register!");
       res.render("register", {
         name,
         email,
@@ -49,13 +50,20 @@ router.post("/register", (req, res) => {
         email,
         password
       });
-      //新增new user後存到User model中
-      newUser
-        .save() //成功儲存後執行then的callback
-        .then(user => {
-          res.redirect("/"); //倒回首頁 localhose:3000/
+      //將密碼做bcrypt處理
+      bcrypt.genSalt(10, (err, salt) =>
+        bcrypt.hash(password, salt, function(err, hash) {
+          if (err) throw err;
+          newUser.password = hash; //將bcrypt的密碼存入newUser
+          //新增new user後存到User model中
+          newUser
+            .save() //成功儲存後執行then的callback
+            .then(user => {
+              res.redirect("/"); //倒回首頁 localhose:3000/
+            })
+            .catch(err => console.log(err)); //若有err則使用catch()接住錯誤
         })
-        .catch(err => console.log(err)); //若有err則使用catch()接住錯誤
+      );
     }
   });
 });
