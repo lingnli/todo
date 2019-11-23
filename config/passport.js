@@ -43,6 +43,7 @@ module.exports = passport => {
         });
     })
   );
+
   //facebook登入設定
   passport.use(
     new FacebookStrategy(
@@ -78,6 +79,9 @@ module.exports = passport => {
                   .catch(err => {
                     console.log(err);
                   });
+              } else {
+                //若已存在，則直接登入
+                return done(null, user);
               }
             });
           });
