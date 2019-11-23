@@ -5,6 +5,10 @@ const LocalStrategy = require("passport-local").Strategy;
 //需要從User model中判斷是否註冊過
 const User = require("../models/user");
 const bcrypt = require("bcrypt");
+require("dotenv").config();
+
+//載入facebook strategy
+const FacebookStrategy = require("passport-facebook").Strategy;
 
 //module export的另一種方法
 module.exports = passport => {
@@ -38,6 +42,48 @@ module.exports = passport => {
           });
         });
     })
+  );
+  //facebook登入設定
+  passport.use(
+    new FacebookStrategy(
+      {
+        clientID: process.env.FACEBOOK_ID,
+        clientSecret: process.env.FACEBOOK_SECRET,
+        callbackURL: process.env.FACEBOOK_CALLBACK,
+        profileFields: ["email", "displayName"]
+      },
+      function(accessToken, refreshToken, profile, done) {
+        User.findOne({ email: profile._json.email }).then(user => {
+          console.log(profile._json);
+          //無法獲得facebook使用者密碼，則自行產生一組隨機密碼經bcrypt後存入User Model
+          var randomPassword = Math.random()
+            .toString(36)
+            .slice(-8);
+          //toString(36):轉為36進位，包含0-8,a-z字母
+          //slice(-8):從最後一位數回來到第八位
+          bcrypt.genSalt(10, (err, salt) => {
+            bcrypt.hash(randomPassword, salt, (err, hash) => {
+              //比對email若user不存在則建立user
+              if (!user) {
+                var newUser = User({
+                  name: profile._json.name,
+                  email: profile._json.email,
+                  password: hash
+                });
+                newUser
+                  .save()
+                  .then(user => {
+                    return done(null, user);
+                  })
+                  .catch(err => {
+                    console.log(err);
+                  });
+              }
+            });
+          });
+        });
+      }
+    )
   );
   //Passport 提供的 serialize 與 deserialize才可以進行session存入即取出
   passport.serializeUser(function(user, done) {

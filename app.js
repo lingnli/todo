@@ -8,7 +8,13 @@ const Todo = require("./models/todo");
 const middleOverride = require("method-override");
 const session = require("express-session");
 const passport = require("passport");
+require("dotenv").config();
 
+//判別開發環境
+if (process.env.NODE_ENV !== "production") {
+  // 如果不是 production 模式:自己電腦主機上，非公開部署平台
+  require("dotenv").config(); // 使用 dotenv 讀取 .env 檔案
+}
 //method-override設定
 app.use(middleOverride("_method"));
 //body-parser設定
@@ -66,6 +72,8 @@ app.use("/", require("./routes/home"));
 app.use("/todos", require("./routes/todo"));
 //載入 /users 結尾開始的router
 app.use("/users", require("./routes/user"));
+//載入 facebook第三方認證
+app.use("/auth", require("./routes/auth"));
 
 app.listen(3000, () => {
   console.log("app is running!");
