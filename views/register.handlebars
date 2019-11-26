@@ -2,7 +2,7 @@
   <div class="col-md-6 mx-auto">
     <div class="card card-body">
       <h1 class='text-center mb-3'>Register</h1>
-
+      {{>messages}}
       <form action="/users/register" method="POST">
         <div class="form-group">
           <label for="name">Name</label>
@@ -26,7 +26,7 @@
 
         <button type="submit" class="btn btn-primary btn-block">Register</button>
 
-        <p class="mt-4">Have an account?<a href="/users/login">Login</a></p>
+        <p class="mt-4">Have an account?<a href="/users/login"> Login</a></p>
 
       </form>
     </div>

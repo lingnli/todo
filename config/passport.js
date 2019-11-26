@@ -10,7 +10,7 @@ require("dotenv").config();
 //載入facebook strategy
 const FacebookStrategy = require("passport-facebook").Strategy;
 
-//module export的另一種方法
+//module export的另一種寫法
 module.exports = passport => {
   passport.use(
     new LocalStrategy({ usernameField: "email" }, function(
@@ -19,7 +19,8 @@ module.exports = passport => {
       password,
       done
     ) {
-      User.findOne({ email: email }) //在User model找到對應email後，把對應的user document抓出來
+      User.findOne({ email: email })
+        //在User model找到對應email後，把對應的user document抓出來
         .then(user => {
           if (!user) {
             if (err) {

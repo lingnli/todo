@@ -6,7 +6,7 @@ const Todo = require("../todo.js");
 //"./"同一層資料夾去找
 //"../"往上層資料夾去找
 
-mongoose.connect("mongodb://127.0.0.1/todo", {
+mongoose.connect(process.env.MONGODB_URI || "mongodb://127.0.0.1/todo", {
   useNewUrlParser: true,
   useUnifiedTopology: true
 });
